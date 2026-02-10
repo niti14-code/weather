@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="weather-app" id="weatherApp">
+        <!-- Dynamic Background Effects -->
+        <div class="bg-gradient" id="bgGradient"></div>
+        <div class="weather-effects" id="weatherEffects">
+            <!-- Effects injected by JS -->
+        </div>
+        <div class="cloud-container" id="cloudContainer">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+        </div>
+
+        <!-- Main Container -->
+        <div class="container">
+            <!-- Header / Search -->
+            <header class="header">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="16" r="14" stroke="white" stroke-width="2"/>
+                        <path d="M16 8V16L22 20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Weather Forecast</span>
+                </div>
+                <div class="header-right">
+                    <div class="time" id="currentTime">09:46</div>
+                    <div class="date" id="currentDate">29 Dec</div>
+                    <div class="location" id="locationDisplay">New York</div>
+                </div>
+            </header>
+
+            <!-- Search Bar -->
+            <div class="search-section">
+                <div class="search-box glass">
+                    <input type="text" id="cityInput" placeholder="Search city..." autocomplete="off">
+                    <button id="searchBtn" class="search-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message hidden"></div>
+
+            <!-- Loading -->
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Main Weather Display -->
+            <div id="weatherResult" class="weather-content hidden">
+                <!-- Left Section -->
+                <div class="weather-left">
+                    <div class="main-weather glass">
+                        <h1 class="weather-title" id="weatherTitle">Stormy</h1>
+                        <h2 class="weather-subtitle" id="weatherSubtitle">with Heavy Rain</h2>
+                        <p class="weather-description" id="weatherDescription">
+                            Variable clouds with snow showers. High 11°C. 
+                            Winds E at 10 to 20 mph. Chance of snow 50%.
+                        </p>
+                        
+                        <div class="temp-stats">
+                            <div class="temp-item">
+                                <span class="temp-value" id="tempMin">12°</span>
+                                <span class="temp-label">Min</span>
+                            </div>
+                            <div class="temp-item">
+                                <span class="temp-value" id="tempCurrent">17°</span>
+                                <span class="temp-label">Current</span>
+                            </div>
+                            <div class="temp-item">
+                                <span class="temp-value" id="tempMax">14°</span>
+                                <span class="temp-label">Max</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UV Index Card -->
+                    <div class="uv-card glass">
+                        <div class="uv-header">
+                            <span>UV Index</span>
+                            <span class="uv-value" id="uvValue">3</span>
+                        </div>
+                        <div class="uv-bar">
+                            <div class="uv-progress" id="uvProgress" style="width: 30%"></div>
+                        </div>
+                        <div class="uv-labels">
+                            <span>Low</span>
+                            <span>Moderate</span>
+                            <span>High</span>
+                        </div>
+                        <div class="sun-times">
+                            <div class="sun-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="5"/>
+                                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                                </svg>
+                                <span>Sunrise: <b id="sunriseTime">6:45 AM</b></span>
+                            </div>
+                            <div class="sun-item">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 3v2M12 19v2M5 12H3M21 12h-2M6 6l-1.5-1.5M19.5 19.5 18 18M6 18l-1.5 1.5M19.5 4.5 18 6"/>
+                                    <circle cx="12" cy="12" r="4"/>
+                                </svg>
+                                <span>Sunset: <b id="sunsetTime">7:30 PM</b></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center - Big Temperature -->
+                <div class="weather-center">
+                    <div class="big-temp" id="bigTemp">27°</div>
+                    <div class="temp-details">
+                        <div class="detail-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v20M2 12h20"/>
+                            </svg>
+                            <span id="windSpeed">Wind 9.8 km/h</span>
+                        </div>
+                        <div class="detail-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                            <span id="humidityDisplay">Humidity 65%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="weather-right">
+                    <div class="forecast-list glass" id="forecastList">
+                        <!-- Forecast items will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Chart -->
+            <div class="bottom-section" id="bottomSection">
+                <div class="temp-chart glass">
+                    <svg viewBox="0 0 800 100" class="chart-svg" id="tempChart">
+                        <!-- Chart will be drawn by JS -->
+                    </svg>
+                    <div class="chart-labels" id="chartLabels">
+                        <!-- Labels injected by JS with current day highlighted -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
